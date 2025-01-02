@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+  username String @unique
+  email    String @unique
+  password String @unique
+  urls     Url[] //the list can be empty also
+}
+
+model Url {
+  id                     String @id @default(cuid())
+  userId                 String //1-m relation so, not unique userId
+  shortenedUrlUniqueSlug String
+  originalUrl            String
+  clicksCount            Int    @default(0) //will be update by the redis data in batches, still to be figured out how
+  user                   User   @relation(fields: [userId], references: [id])
+  tags String[]
+  comments String
+}
+
+
+
+
+
