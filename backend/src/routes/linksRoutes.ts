@@ -1,16 +1,20 @@
 import express, { Request, Response } from "express";
 import {
-  createGuestShortLinks,
-  createShortLinks,
+  guestCreateShortLinks,
   getAllLinksOfAUser,
   getoriginalLink,
+  authorisedCreateShortLinks,
 } from "../controllers/linksControllers";
 import { authSessionMiddleware } from "../middlewares/authMiddleware";
 export const linkRouter = express.Router();
 
-linkRouter.post("/accessoriginallink", getoriginalLink); //just returning the the original link anothing else
-linkRouter.post("/guestuser/createshortlinks", createGuestShortLinks); //
-linkRouter.post("/createshortlinks", authSessionMiddleware, createShortLinks); //this route will not work without middleware as it is ass with jwt
+linkRouter.post("/accessoriginallink", getoriginalLink);
+linkRouter.post("/guest/createshortlinks", guestCreateShortLinks); //this route will not work without middleware as it is ass with jwt
+linkRouter.post(
+  "/authorised/createshortlinks",
+  authSessionMiddleware,
+  authorisedCreateShortLinks
+);
 linkRouter.get("/links", authSessionMiddleware, getAllLinksOfAUser);
 // linkRouter.post("/getoriginallink", getoriginalLink);//it is based on the frontend redirect using window.location.href
 

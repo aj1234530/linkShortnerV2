@@ -11,7 +11,7 @@ function UrlRedirectnew() {
     const uniqueSlugForBackend = location.pathname.split("").slice(6).join(""); //using slice to cut the (/user/)
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/v1/user/accessoriginallink",
+        "https://4096-115-245-205-158.ngrok-free.app/api/v1/user/accessoriginallink",
         {
           //sending the body , to be cofiremed if reachers(diff synatax than axios post)
           shortenedUrlUniqueSlug: uniqueSlugForBackend,

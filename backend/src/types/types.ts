@@ -4,6 +4,7 @@ declare global {
     interface Request {
       //type i set to any please fix
       userId: string; // or just `user` if you don't have a specific type for it
+      geoData: any;
     }
   }
 }

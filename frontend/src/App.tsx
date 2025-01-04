@@ -7,8 +7,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import Root from "./pages/Root";
 import NotFound from "./components/NotFound";
 import Dashboard from "./pages/Dashboard";
-import Links from "./pages/Core/Links";
-import Analytics from "./pages/Core/Analytics";
+import Links from "./pages/coreFeatures/Links";
+import Analytics from "./pages/coreFeatures/Analytics";
 function App() {
   //for dynamic route , can we use something like zustand or redux st such it is  there as look as auth sessio
   //user will reset as we refesh
@@ -24,7 +24,7 @@ function App() {
           <Route path="/:user?/dashboard" element={<Dashboard />}></Route>
 
           <Route path="/createlink" element={<CreateLink />}></Route>
-          <Route path="/analytics" element={<Analytics />}></Route>
+          <Route path="/user/analytics" element={<Analytics />}></Route>
           <Route path="/:user?/links" element={<Links />}></Route>
           <Route path="/user/*" element={<UrlRedirectnew />}></Route>
           {/* anyother router outside of these */}
@@ -34,5 +34,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;

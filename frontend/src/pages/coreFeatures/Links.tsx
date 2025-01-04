@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../components/Sidebar";
+
 interface fetchedLink {
   id: string;
   userId: string;
@@ -32,7 +32,6 @@ function Links() {
   }, []);
   return (
     <div className="page-container">
-      <Sidebar />
       <div className="main-content">
         <h1 className="page-title">Links</h1>
         <div className="link-cards">

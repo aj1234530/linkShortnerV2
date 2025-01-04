@@ -7,9 +7,10 @@ function CreateShortLink({ longLink }: { longLink: string | null }) {
   const createShortLink = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/v1/user/createshortlinks",
+        "http://localhost:3000/api/v1/user/createshortlinks",
         {
           originalUrlFromBody: longLink,
+          
         },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -26,7 +27,9 @@ function CreateShortLink({ longLink }: { longLink: string | null }) {
   }, []);
   return (
     <div className="short-link-input-output">
-      <p>{shortenedLink}</p>
+      <a target="blank" href={`http://${shortenedLink}`}>
+        {shortenedLink}
+      </a>
     </div>
   );
 }

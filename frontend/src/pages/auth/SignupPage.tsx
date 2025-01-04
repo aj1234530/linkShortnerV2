@@ -15,7 +15,7 @@ function SignupPage() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:3001/api/v1/auth/signup",
+        "http://localhost:3000/api/v1/auth/signup",
         {
           username: username,
           email: email,
