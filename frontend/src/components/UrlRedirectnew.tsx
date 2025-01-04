@@ -2,14 +2,20 @@
 //we will try to use useNavigate() from rrd
 //set path /dub/* to this componet
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import NotFound from "./NotFound";
 
 function UrlRedirectnew() {
   const location = useLocation();
+  const [redirectMessage, setRedirectMessage] = useState<null | string>(null);
+  const [notFoundMessage, setNotFoundMessage] = useState<null | boolean>(false);
+
+  console.log(location);
   const handleRedirect = async () => {
     const uniqueSlugForBackend = location.pathname.split("").slice(6).join(""); //using slice to cut the (/user/)
     try {
+      setRedirectMessage("redirecting");
       const response = await axios.post(
         "https://4096-115-245-205-158.ngrok-free.app/api/v1/user/accessoriginallink",
         {
@@ -26,6 +32,8 @@ function UrlRedirectnew() {
         window.location.href = `${orignalUrl}`;
       }
     } catch (err) {
+      setRedirectMessage(null);
+      setNotFoundMessage(true);
       console.log("invalid");
     }
   };
@@ -35,7 +43,8 @@ function UrlRedirectnew() {
   }, []);
   return (
     <>
-      <div>Redirecting Please Wait</div>
+      {redirectMessage && <div>{redirectMessage}</div>}
+      {notFoundMessage && <NotFound />}
     </>
   );
 }

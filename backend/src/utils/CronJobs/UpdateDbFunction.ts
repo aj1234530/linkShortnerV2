@@ -10,18 +10,18 @@ interface data {
 
 export async function syncRedisToDB() {
   try {
-    console.log("starting the sync process, code is here 1");
+    // console.log("starting the sync process, code is here 1");
     const keys = await redisClient.keys("*:create:UrlInfo");
-    console.log(keys); //itna keys hai
+    // console.log(keys); //itna keys hai
 
     keys.map(async (key) => {
       const data = await redisClient.hGetAll(key);
-      console.log(
-        "code is here 2 :",
-        data,
-        data.originalUrl,
-        key.split(":")[0]
-      );
+      // console.log(
+      //   "code is here 2 :",
+      //   data,
+      //   data.originalUrl,
+      //   key.split(":")[0]
+      // );
       try {
         if (data.userId !== "no user id") {
           const createdUrl = await prisma.url.create({
@@ -51,14 +51,24 @@ export async function syncRedisToDB() {
         console.log(error);
       }
     });
-    const couterKeys = await redisClient.keys("*:clickMetaData");
 
+    //updating created links and counter both in the same cron job (for simplicity)
+    const couterKeys = await redisClient.keys("*:urlInfo");
     couterKeys.map(async (counterKey) => {
       const data = await redisClient.hGetAll(counterKey);
-      console.log(data);
+      try {
+        //this is wrong you are updating many(as original url is not unique in shcema) (will updat others url also if same url - we will have to attac)
+        const findUrl = await prisma.url.updateMany({
+          where: { originalUrl: data.originalUrl },
+          data: { clicksCount: parseInt(data.clicksCount) },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      // console.log(data);
     });
 
-    console.log("code is here", couterKeys);
+    // console.log("code is here", couterKeys);
   } catch (error) {
     console.log(error);
   }

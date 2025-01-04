@@ -62,7 +62,10 @@ export const guestCreateShortLinks = async (req: Request, res: Response) => {
         comments: comments || "no comments",
       }
     );
-
+    await redisClient.hSet(`${shortenedUrlSlug}:urlInfo`, {
+      originalUrl: originalUrlFromBody,
+      clickCount: 0,
+    });
     //creaet the url in url table giving the id of user id it will be associated to that user(where nhi ata create me)
     // const urlCreated = await prisma.url.create({
     //   data: {
@@ -81,7 +84,10 @@ export const guestCreateShortLinks = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server error" });
   }
 };
-export const authorisedCreateShortLinks = async (req: Request, res: Response) => {
+export const authorisedCreateShortLinks = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const { originalUrlFromBody, tags, comments }: reqBody = req.body;
     const userId = req.userId;
@@ -111,6 +117,11 @@ export const authorisedCreateShortLinks = async (req: Request, res: Response) =>
         comments: comments || "no comments",
       }
     );
+    //creating to keep in redis for counter
+    await redisClient.hSet(`${shortenedUrlSlug}:urlInfo`, {
+      originalUrl: originalUrlFromBody,
+      clicksCount: 0,
+    });
 
     //creaet the url in url table giving the id of user id it will be associated to that user(where nhi ata create me)
     // const urlCreated = await prisma.url.create({
@@ -159,17 +170,17 @@ export const getoriginalLink = async (req: Request, res: Response) => {
     //1. get the origina url
 
     const originalUrl = await redisClient.HGET(
-      `${shortenedUrlUniqueSlug}:create:UrlInfo`,
+      `${shortenedUrlUniqueSlug}:urlInfo`,
       "originalUrl"
     );
     //can we do send the url
     if (!originalUrl) {
-      res.status(404).json({ message: "the original can't be found" });
+      res.status(404).json({ message: "the original url  can't be found" });
       return;
     }
     //2.increasing the count of the hash field
     const increasedCount = await redisClient.hIncrBy(
-      `${shortenedUrlUniqueSlug}:UrlInfo`,
+      `${shortenedUrlUniqueSlug}:urlInfo`,
       "clicksCount",
       1
     );

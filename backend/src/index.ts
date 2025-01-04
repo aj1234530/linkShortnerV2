@@ -81,4 +81,4 @@ app.use(function (req, res) {
 app.listen(PORT);
 
 //starting job
-// job.start();12
+job.start();
